@@ -193,7 +193,7 @@ def main():
     output=args.output.resolve();output.mkdir(parents=True,exist_ok=False)
     (output/"scenes").mkdir()
     config=json.loads((ROOT/"configs/fixture.json").read_text(encoding="utf-8"))
-    manifest={"schema":"facadeprobe.resource.v1","version":"0.1.0","fixture":config,"blender":bpy.app.version_string,"render":{"engine":"Cycles","device":"CPU","samples":args.samples,"width":args.width,"height":args.height,"denoising":True},"depth_raw":"Blender 5.2 Cycles Depth pass: camera-Z metres, background 1e10; independently checked against ray-hit positions transformed into the OpenCV camera","views":[],"cases":[]}
+    manifest={"schema":"facadeprobe.resource.v1","version":"0.1.0","fixture":config,"model_coordinates":config["model_coordinates"],"blender":bpy.app.version_string,"render":{"engine":"Cycles","device":"CPU","samples":args.samples,"width":args.width,"height":args.height,"denoising":True},"depth_raw":"Blender 5.2 Cycles Depth pass: camera-Z metres, background 1e10; independently checked against ray-hit positions transformed into the OpenCV camera","views":[],"cases":[]}
     for case in args.cases:
         scene,cameras,nodes,openings=setup(config,case,args)
         bpy.context.view_layer.update()

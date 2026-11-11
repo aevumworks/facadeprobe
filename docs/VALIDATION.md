@@ -20,6 +20,8 @@ All three `.blend` files were reopened by Blender. Mesh counts: clean 138, balco
 
 GLB importer checks used Blender only. No claim is made about other 3D applications or pixel-identical GLB rendering.
 
+The GLBs use native glTF Y-up; JSON world uses dataset/Blender Z-up. A separate `verify_gltf_coordinates.py` parses native GLB node JSON, composes parent/TRS matrices, converts the world basis and camera-local axes, then compares all 12 camera poses and opening-point projections with the JSON camera path. It does not use Blender's automatic reimport conversion. The actual matrices, numeric front-camera example and errors are in `gltf-coordinate-validation.json`; the cross-format contract is documented explicitly.
+
 ## What failed before the release
 
 Initial Blender 5.2 API probes encountered the changed file-output API, and attempting to load a single float multilayer EXR through Blender Image returned no pixels. The released pipeline uses the observed 5.2 API and OpenEXR's `Value.V` channel. All real runs use `--python-exit-code 1` so a Python exception cannot be mistaken for a successful Blender exit.

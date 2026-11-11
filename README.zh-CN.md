@@ -30,6 +30,20 @@
 - 遮罩只标可见表面，不补画被挡住的完整窗户。窗框、窗面和中梃归为窗；窗台归墙/饰面。窗面采用不透明材质，不模拟物理玻璃透射。
 - `.blend` 保存相对输出路径；`.glb` 为通用几何交换格式，不承诺与 Blender 像素完全相同。CV 的 K 和外参以 JSON 为准。
 
+### GLB 在普通 glTF 引擎中的坐标
+
+GLB 原生是 glTF 的 **Y-up**，相机 JSON/Blender 世界是 **Z-up**：dataset `[X,Y,Z]` → glTF `[X,Z,-Y]`；反向 `[x,y,z]` → dataset `[x,-z,y]`。齐次列向量变换为：
+
+```text
+M_gltf_from_dataset = [[1,0,0,0],[0,0,1,0],[0,-1,0,0],[0,0,0,1]]
+M_dataset_from_gltf = [[1,0,0,0],[0,0,-1,0],[0,1,0,0],[0,0,0,1]]
+p_cv = world_to_camera_cv @ M_dataset_from_gltf @ p_gltf_world
+```
+
+例如正面相机在数据世界约 `[0,-20,5.6]`，在原生 GLB 世界是 `[0,5.6,20]`；注视点 `[0,0,4.4]` 转为 `[0,4.4,0]`，正确换系后都投到约 `[480,360]` 像素。原生 glTF 相机自身沿 −Z 看、+Y 向上；JSON/OpenCV 相机沿 +Z 看、+Y 向下，两者的局部轴转换为 `diag(1,-1,-1,1)`，与世界换系分开处理。不能把 JSON 外参直接套到 Y-up GLB 顶点。
+
+完整推导见 [字段契约](docs/CONTRACT.md)。转换矩阵已写入 manifest；`gltf-coordinate-validation.json` 直接解析原生 GLB 节点进行校验，没有借助 Blender 导入自动换轴。
+
 源场景、12 视图及原始 EXR 通道的完整目录见 [英文说明](README.md) 和 [字段契约](docs/CONTRACT.md)。
 
 ## 从源码复现
@@ -42,6 +56,7 @@
 blender --background --factory-startup --python-exit-code 1 --python scripts/generate.py -- --output data
 python scripts/process_validate.py data
 blender --background --factory-startup --python-exit-code 1 --python scripts/verify_import.py -- data
+python scripts/verify_gltf_coordinates.py data
 python scripts/build_viewer.py data
 ```
 

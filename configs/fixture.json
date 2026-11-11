@@ -10,6 +10,16 @@
   "columns_x_m": [-3.6, 0.0, 3.6],
   "levels_z_m": [1.7, 4.5, 7.3],
   "camera_target_m": [0.0, 0.0, 4.4],
+  "model_coordinates": {
+    "dataset_world": "right-handed, X along facade, Z up, front -Y; metres",
+    "gltf_world": "glTF 2.0 right-handed Y-up; metres",
+    "gltf_from_dataset": [[1,0,0,0],[0,0,1,0],[0,-1,0,0],[0,0,0,1]],
+    "dataset_from_gltf": [[1,0,0,0],[0,0,-1,0],[0,1,0,0],[0,0,0,1]],
+    "opencv_from_gltf_camera_local": [[1,0,0,0],[0,-1,0,0],[0,0,-1,0],[0,0,0,1]],
+    "point_mapping": "dataset [X,Y,Z] -> glTF [X,Z,-Y]; glTF [x,y,z] -> dataset [x,-z,y]",
+    "projection_from_gltf_world": "p_cv = world_to_camera_cv @ dataset_from_gltf @ p_gltf_world",
+    "gltf_camera_local": "+X right, +Y up, viewing direction -Z; JSON OpenCV camera uses +X right, +Y down, +Z forward"
+  },
   "cameras": {
     "front": [0.0, -20.0, 5.6],
     "left": [-9.0, -18.0, 6.0],

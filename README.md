@@ -68,6 +68,18 @@ data/
 - Bounding boxes are integer `[x,y,width,height]` around visible pixels. A box does not mean its whole interior is window material.
 - `.glb` is an interchange model, not a pixel-identical Blender renderer. Camera JSON is authoritative for CV projection; original renderer passes remain in the resource.
 
+### GLB coordinates in a normal glTF engine
+
+GLB is native **glTF Y-up**, while JSON/Blender world is **Z-up**. Dataset `[X,Y,Z]` maps to glTF `[X,Z,-Y]`; inverse `[x,y,z]` maps to dataset `[x,-z,y]`. For homogeneous column vectors:
+
+```text
+M_gltf_from_dataset = [[1,0,0,0],[0,0,1,0],[0,-1,0,0],[0,0,0,1]]
+M_dataset_from_gltf = [[1,0,0,0],[0,0,-1,0],[0,1,0,0],[0,0,0,1]]
+p_cv = world_to_camera_cv @ M_dataset_from_gltf @ p_gltf_world
+```
+
+The front camera is `[0,-20,5.6]` in dataset world and `[0,5.6,20]` in native glTF world. Look-at point `[0,0,4.4]` becomes `[0,4.4,0]` and projects near `[480,360]` pixels through either correct path. Native glTF camera local axes look down **−Z with +Y up**; the JSON camera uses **+Z forward with +Y down**. Their local-axis conversion is `diag(1,-1,-1,1)`, separate from the world conversion. Do not directly apply JSON extrinsics to Y-up GLB coordinates. The full derivation and actual native-GLB checks are in [the data contract](docs/CONTRACT.md) and `data/gltf-coordinate-validation.json`; matrices are also in `manifest.json:model_coordinates`.
+
 See [the data contract](docs/CONTRACT.md) for IDs and loading examples.
 
 ## Reproduce from source
@@ -80,6 +92,7 @@ Create a local Python environment and install `requirements.txt`, then run from 
 blender --background --factory-startup --python-exit-code 1 --python scripts/generate.py -- --output data
 python scripts/process_validate.py data
 blender --background --factory-startup --python-exit-code 1 --python scripts/verify_import.py -- data
+python scripts/verify_gltf_coordinates.py data
 python scripts/build_viewer.py data
 ```
 

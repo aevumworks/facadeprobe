@@ -13,8 +13,11 @@ def main():
     data=ROOT/"data"
     checks=json.loads((data/"validation.json").read_text(encoding="utf-8"))
     imports=json.loads((data/"import-validation.json").read_text(encoding="utf-8"))
+    native_gltf=json.loads((data/"gltf-coordinate-validation.json").read_text(encoding="utf-8"))
     if checks.get("passed") is not True or checks["view_count"]!=12 or imports.get("passed") is not True:
         raise ValueError("The full rendered/validated resource and import checks are required.")
+    if native_gltf.get("passed") is not True or len(native_gltf["camera_checks"])!=12:
+        raise ValueError("Native GLB coordinate checks are required.")
     if not (data/"index.html").is_file():
         raise ValueError("Build the offline viewer first.")
     dist=ROOT/"dist";dist.mkdir(exist_ok=True)
