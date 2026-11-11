@@ -1,0 +1,29 @@
+{
+  "name": "courtyard-facade",
+  "version": "0.1.0",
+  "width_m": 12.0,
+  "height_m": 9.2,
+  "depth_m": 4.0,
+  "wall_depth_m": 0.35,
+  "window_width_m": 2.1,
+  "window_height_m": 1.7,
+  "columns_x_m": [-3.6, 0.0, 3.6],
+  "levels_z_m": [1.7, 4.5, 7.3],
+  "camera_target_m": [0.0, 0.0, 4.4],
+  "cameras": {
+    "front": [0.0, -20.0, 5.6],
+    "left": [-9.0, -18.0, 6.0],
+    "right": [9.0, -18.0, 6.0],
+    "high": [4.0, -16.0, 10.0]
+  },
+  "classes": [
+    {"id": 0, "name": "background", "zh": "背景", "color": [235,241,246]},
+    {"id": 1, "name": "wall", "zh": "墙体与饰面", "color": [196,205,212]},
+    {"id": 2, "name": "window", "zh": "窗框与窗面", "color": [48,138,202]},
+    {"id": 3, "name": "door", "zh": "门", "color": [224,150,60]},
+    {"id": 4, "name": "balcony", "zh": "阳台与栏杆", "color": [153,116,189]},
+    {"id": 5, "name": "screen", "zh": "前景格栅与挡板", "color": [199,91,121]},
+    {"id": 6, "name": "ground", "zh": "地面", "color": [143,167,128]},
+    {"id": 7, "name": "roof", "zh": "屋顶与女儿墙", "color": [90,106,126]}
+  ]
+}

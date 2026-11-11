@@ -1,0 +1,7 @@
+.venv/
+.work/
+data/
+dist/
+__pycache__/
+*.pyc
+*.blend1
